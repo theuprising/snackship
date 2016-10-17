@@ -21,20 +21,16 @@ export default {
   archiveBucket: 'production',
   strategy: async config => {
     try {
-      console.log('archiving...')
       await archiveS3({
         dir: config.src,
         bucket: config.archiveBucket,
         key: `build-${(new Date()).toString().replace(/ /, '_').tgz}`
       })
-      console.log('archived!')
-      console.log('deploying...')
+      
       await deployS3({
         dir: config.src,
         bucket: config.targetBucket
       })
-      console.log('deployed!')
-      console.log('⛵️⛵️⛵️⛵️⛵️shipped!⛵️⛵️⛵️⛵️⛵️')
     } catch (e) {
       console.log(`error: ${e}`)
       throw e
