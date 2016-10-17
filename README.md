@@ -46,6 +46,6 @@ export default {
 ## run
 
 ```bash
-snackship -c snackship.json
+snackship -c snackship.js
 ```
 
