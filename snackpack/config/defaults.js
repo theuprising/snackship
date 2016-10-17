@@ -1,13 +1,19 @@
-import { DefinePlugin } from 'webpack'
+import { BannerPlugin, DefinePlugin } from 'webpack'
 
 const injection = {
   'REQUIRE_CONFIG': 'require(path.resolve(process.cwd(), commander.configFile))'
-  // 'REQUIRE_CONFIG': 'hello there'
 }
 console.log('INJECTION', injection)
-const plugin = new DefinePlugin(injection)
+const plugins = [
+  new DefinePlugin(injection),
+  new BannerPlugin({
+    entryOnly: true,
+    banner: '#! /usr/bin/env node',
+    raw: true
+  })
+]
 
 export default {
-  plugins: [plugin]
+  plugins: plugins
 }
 
