@@ -4,8 +4,6 @@ import commander from 'commander'
 
 const version = require('../../package.json').version
 
-console.log(`----> shipping with snackship v${version}`)
-
 commander
   .version(version)
   .option('-c, --config-file [file]', 'config file [snackship.json]', 'snackshp.js')
