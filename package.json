@@ -23,5 +23,9 @@
   "devDependencies": {
     "npm-run-all": "^3.1.1",
     "snackpack": "^2.2.0"
+  },
+  "repository": {
+    "url": "git@github.com:theuprising/snackship.git",
+    "type": "git"
   }
 }
