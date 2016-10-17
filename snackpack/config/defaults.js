@@ -1,7 +1,7 @@
 import { BannerPlugin, DefinePlugin } from 'webpack'
 
 const injection = {
-  'REQUIRE_CONFIG': 'require(path.resolve(process.cwd(), commander.configFile))'
+  'REQUIRE_CONFIG': 'require(path.resolve(commander.configFile)).default'
 }
 console.log('INJECTION', injection)
 const plugins = [
