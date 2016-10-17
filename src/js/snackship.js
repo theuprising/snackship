@@ -18,6 +18,8 @@ export const exec = cmd =>
       return [first, rest]
     }
 
+    console.log('exec', {cmd})
+
     const p = spawn(...parse(cmd))
 
     let output = {
