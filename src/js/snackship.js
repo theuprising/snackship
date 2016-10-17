@@ -1,5 +1,4 @@
 import { spawn } from 'child_process'
-import { __, curry } from 'ramda'
 
 const s3Cli = 'node_modules/.bin/s3-cli'
 
@@ -75,8 +74,7 @@ export const deployS3 = async ({dir, bucket}) => {
 
 export const deployHeroku = async ({dir, app}) => {
   log('deploying to heroku')
-  const execIn = curry(exec)(__, {cwd: dir})
-  await execIn(`cd ${dir}`)
+  const execIn = cmd => exec(cmd, {cwd: dir})
   await execIn(`rm -rf .git`)
   await execIn(`git init`)
   await execIn(`git add .`)
