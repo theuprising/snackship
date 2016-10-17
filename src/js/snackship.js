@@ -1,4 +1,5 @@
 import { spawn } from 'child_process'
+import { __, curry } from 'ramda'
 
 const s3Cli = 'node_modules/.bin/s3-cli'
 
@@ -11,11 +12,11 @@ babel({
 
 const version = require('../../package.json').version
 
-const log = (...args) => console.log('----> ⛵️  ', ...args, ' ⛵️')
+const log = (...args) => console.log('----> ⛵️⛵️⛵️  ', ...args)
 
 // promisified child_process
 // exec :: String -> async { stdout: String, stderr: String, code: Number }
-export const exec = cmd =>
+export const exec = (cmd, opts = {}) =>
   new Promise((resolve, reject) => {
     const parse = cmd => {
       const [first, ...rest] = cmd.split(' ')
@@ -25,7 +26,7 @@ export const exec = cmd =>
     const parsed = parse(cmd)
     console.log('exec', {cmd, parsed})
 
-    const p = spawn(...parsed)
+    const p = spawn(...parsed, opts)
 
     let output = {
       stdout: '',
@@ -74,18 +75,16 @@ export const deployS3 = async ({dir, bucket}) => {
 
 export const deployHeroku = async ({dir, app}) => {
   log('deploying to heroku')
-  const _pwd = await exec(`pwd`)
-  const pwd = _pwd.stdout
-  await exec(`cd ${dir}`)
-  await exec(`rm -rf .git`)
-  await exec(`git init`)
-  await exec(`git add .`)
-  await exec(`git commit -am 'build'`)
+  const execIn = curry(exec)(__, {cwd: dir})
+  await execIn(`cd ${dir}`)
+  await execIn(`rm -rf .git`)
+  await execIn(`git init`)
+  await execIn(`git add .`)
+  await execIn(`git commit -am 'build'`)
   const remote = `https://git.heroku.com/${app}.git`
-  await exec(`heroku maintenance:on --app ${app}`)
-  await exec(`git push ${remote} master -f`)
-  await exec(`heroku maintenance:off --app ${app}`)
-  await exec(`cd ${pwd}`)
+  await execIn(`heroku maintenance:on --app ${app}`)
+  await execIn(`git push ${remote} master -f`)
+  await execIn(`heroku maintenance:off --app ${app}`)
   log('deployed to heroku')
 }
 
