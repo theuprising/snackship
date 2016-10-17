@@ -1,4 +1,5 @@
 import { ship } from './snackship.js'
+import path from 'path'
 import commander from 'commander'
 
 const version = require('../../package.json').version
@@ -10,7 +11,9 @@ commander
   .option('-c, --config-file [file]', 'config file [snackship.json]', 'snackshp.js')
   .parse(process.argv)
 
-const config = REQUIRE_CONFIG // eslint-disable-line
+const config = ((commander, path) => {
+  REQUIRE_CONFIG // eslint-disable-line
+})(commander, path)
 
 ship(config)
 
