@@ -18,9 +18,10 @@ export const exec = cmd =>
       return [first, rest]
     }
 
-    console.log('exec', {cmd})
+    const parsed = parse(cmd)
+    console.log('exec', {cmd, parsed})
 
-    const p = spawn(...parse(cmd))
+    const p = spawn(...parsed)
 
     let output = {
       stdout: '',
@@ -32,9 +33,11 @@ export const exec = cmd =>
     p.stderr.on('data', data => { output.stderr += data })
     p.on('close', code => {
       output.code = code
-      if (code === '0') {
+      if (code === 0) {
+        console.log('success', {output})
         resolve(output)
       } else {
+        console.log('failure', {output})
         reject(output)
       }
     })
