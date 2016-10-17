@@ -81,7 +81,7 @@ export const deployHeroku = async ({dir, app}) => {
   await exec(`git init`)
   await exec(`git add .`)
   await exec(`git commit -am 'build'`)
-  const remote = `git@heroku.com:${app}.git`
+  const remote = `https://git.heroku.com/${app}.git`
   await exec(`heroku maintenance:on --app ${app}`)
   await exec(`git push ${remote} master`)
   await exec(`heroku maintenance:off --app ${app}`)
