@@ -24,7 +24,7 @@ export default {
       await archiveS3({
         dir: config.src,
         bucket: config.archiveBucket,
-        key: `build-${(new Date()).toString().replace(/ /, '_').tgz}`
+        key: `build-${(new Date()).toString().replace(/ /, '_')}.tgz`
       })
       
       await deployS3({
