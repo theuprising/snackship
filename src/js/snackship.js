@@ -62,9 +62,9 @@ export const deployS3 = async ({dir, bucket}) => {
   return
 }
 
-export const ship = config => {
+export const ship = async config => {
   console.log(`----> ⛵️ shipping with snackship ${version}`)
-  config.strategy(config)
+  await config.strategy(config)
   console.log('----> ⛵️ shipped!')
 }
 
