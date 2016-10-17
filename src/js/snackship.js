@@ -2,6 +2,13 @@ import { spawn } from 'child_process'
 
 const s3Cli = 'node_modules/.bin/s3-cli'
 
+import 'babel-polyfill'
+import babel from 'babel-register'
+babel({
+  presets: ['stage-0', 'es2015'],
+  plugins: ['transform-object-rest-spread']
+})
+
 export const exec = cmd =>
   new Promise((resolve, reject) => {
     const parse = cmd => {
