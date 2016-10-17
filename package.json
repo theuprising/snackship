@@ -13,6 +13,7 @@
     "build": "run-s clean build:both",
     "prepublish": "npm run build"
   },
+  "files": ["./dist"],
   "bin": {
     "snackship": "dist/bin.js"
   },
