@@ -893,7 +893,7 @@ babel-preset-stage-3@^6.17.0:
     babel-plugin-transform-exponentiation-operator "^6.3.13"
     babel-plugin-transform-object-rest-spread "^6.16.0"
 
-babel-register@^6.16.0:
+babel-register@^6.16.0, babel-register@^6.16.3:
   version "6.16.3"
   resolved "https://registry.yarnpkg.com/babel-register/-/babel-register-6.16.3.tgz#7b0c0ca7bfdeb9188ba4c27e5fcb7599a497c624"
   dependencies:
@@ -3716,7 +3716,7 @@ querystringify@0.0.x:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-0.0.4.tgz#0cf7f84f9463ff0ae51c4c4b142d95be37724d9c"
 
-ramda@^0.22.1:
+ramda, ramda@^0.22.1:
   version "0.22.1"
   resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.22.1.tgz#031da0c3df417c5b33c96234757eb37033f36a0e"
 
@@ -4071,9 +4071,9 @@ slash@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/slash/-/slash-1.0.0.tgz#c41f2f6c39fc16d1cd17ad4b5d896114ae470d55"
 
-snackpack:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/snackpack/-/snackpack-2.2.0.tgz#8bc022b4a624837647be08dd4f2f5d67fb779324"
+snackpack@2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/snackpack/-/snackpack-2.4.1.tgz#c29c9a2e915597364bfdbff9f770a911c62af995"
   dependencies:
     autoprefixer "^6.5.0"
     babel-core "^6.17.0"
@@ -4090,6 +4090,7 @@ snackpack:
     babel-preset-react "^6.16.0"
     babel-preset-react-optimize "^1.0.1"
     babel-preset-stage-0 "^6.16.0"
+    babel-register "^6.16.3"
     commander "^2.9.0"
     copy-webpack-plugin "^3.0.1"
     css-loader "^0.25.0"

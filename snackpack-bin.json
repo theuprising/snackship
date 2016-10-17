@@ -14,7 +14,8 @@
       "builders": [
         "babel",
         "es7",
-        "node"
+        "node",
+        "config"
       ]
     }
   }
