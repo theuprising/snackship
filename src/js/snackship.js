@@ -24,7 +24,7 @@ export const exec = (cmd, opts = {}) =>
     }
 
     const parsed = parse(cmd)
-    console.log('exec', {cmd, parsed})
+    console.log('exec', {cmd, parsed, opts})
 
     const p = spawn(...parsed, opts)
 
