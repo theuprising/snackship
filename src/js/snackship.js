@@ -11,6 +11,10 @@ babel({
 
 const version = require('../../package.json').version
 
+const log = (...args) => console.log('----> ⛵️  ', ...args, ' ⛵️')
+
+// promisified child_process
+// exec :: String -> async { stdout: String, stderr: String, code: Number }
 export const exec = cmd =>
   new Promise((resolve, reject) => {
     const parse = cmd => {
@@ -43,6 +47,7 @@ export const exec = cmd =>
     })
   })
 
+// straight from stack overflow
 const uuidV4 = () =>
   'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
     const r = Math.random() * 16 | 0
@@ -52,25 +57,42 @@ const uuidV4 = () =>
 
 export const archiveS3 = async ({dir, bucket, key}) => {
   const f = uuidV4()
-  console.log('----> ⛵️ archiving to s3')
+  log('archiving to s3')
   await exec('mkdir -p tmp')
   await exec(`tar czf tmp/tar-${f} ${dir}`)
   await exec(`${s3Cli} put tmp/tar-${f} s3://${bucket}/${key}`)
-  console.log('----> ⛵️ done archiving to s3')
+  log('done archiving to s3')
   return
 }
 
 export const deployS3 = async ({dir, bucket}) => {
-  console.log('----> ⛵️ deploying to s3')
+  log('deploying to s3')
   await exec(`${s3Cli} sync -P ${dir} s3://${bucket}/`)
-  console.log('----> ⛵️ done deploying to s3')
+  log('done deploying to s3')
   return
 }
 
+export const deployHeroku = async ({dir, app}) => {
+  log('deploying to heroku')
+  const _pwd = await exec(`pwd`)
+  const pwd = _pwd.stdout
+  await exec(`cd ${dir}`)
+  await exec(`rm -rf .git`)
+  await exec(`git init`)
+  await exec(`git add .`)
+  await exec(`git commit -am 'build'`)
+  const remote = `git@heroku.com:${app}.git`
+  await exec(`heroku maintenance:on --app ${app}`)
+  await exec(`git push ${remote} master`)
+  await exec(`heroku maintenance:off --app ${app}`)
+  await exec(`cd ${pwd}`)
+  log('deployed to heroku')
+}
+
 export const ship = async config => {
-  console.log(`----> ⛵️ shipping with snackship ${version}`)
+  log(`shipping with snackship ${version}`)
   await config.strategy(config)
-  console.log('----> ⛵️ shipped!')
+  log('shipped!')
 }
 
 export default ship
