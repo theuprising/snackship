@@ -1,5 +1,5 @@
 import { ship } from './snackship.js'
-import { readFileSync } from 'fs'
+import path from 'path' // eslint-disable-line
 import commander from 'commander'
 
 const version = require('../../package.json').version
@@ -8,10 +8,10 @@ console.log(`----> shipping with snackship v${version}`)
 
 commander
   .version(version)
-  .option('-c, --config-file [file]', 'config file [snackship.json]', 'snackshp.json')
+  .option('-c, --config-file [file]', 'config file [snackship.json]', 'snackshp.js')
   .parse(process.argv)
 
-const config = JSON.parse(readFileSync(commander.configFile, 'utf8'))
+const config = REQUIRE_CONFIG // eslint-disable-line
 
 ship(config)
 

@@ -22,7 +22,8 @@
   },
   "devDependencies": {
     "npm-run-all": "^3.1.1",
-    "snackpack": "^2.2.0"
+    "ramda": "^0.22.1",
+    "snackpack": "2.4.1"
   },
   "repository": {
     "url": "git@github.com:theuprising/snackship.git",
