@@ -9,6 +9,8 @@ babel({
   plugins: ['transform-object-rest-spread']
 })
 
+const version = require('../../package.json').version
+
 export const exec = cmd =>
   new Promise((resolve, reject) => {
     const parse = cmd => {
@@ -45,21 +47,26 @@ const uuidV4 = () =>
 
 export const archiveS3 = async ({dir, bucket, key}) => {
   const f = uuidV4()
-  console.log('----> archiving to s3')
+  console.log('----> ⛵️ archiving to s3')
   await exec('mkdir -p tmp')
   await exec(`tar czf tmp/tar-${f} ${dir}`)
   await exec(`${s3Cli} put tmp/tar-${f} s3://${bucket}/${key}`)
-  console.log('----> done archiving to s3')
+  console.log('----> ⛵️ done archiving to s3')
   return
 }
 
 export const deployS3 = async ({dir, bucket}) => {
-  console.log('----> deploying to s3')
+  console.log('----> ⛵️ deploying to s3')
   await exec(`${s3Cli} sync -P ${dir} s3://${bucket}/`)
-  console.log('----> done deploying to s3')
+  console.log('----> ⛵️ done deploying to s3')
   return
 }
 
-export const ship = config => config.strategy(config)
+export const ship = config => {
+  console.log(`----> ⛵️ shipping with snackship ${version}`)
+  config.strategy(config)
+  console.log('----> ⛵️ shipped!')
+}
+
 export default ship
 
