@@ -36,14 +36,27 @@ export const exec = cmd =>
     })
   })
 
+const uuidV4 = () =>
+  'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = Math.random() * 16 | 0
+    const v = c === 'x' ? r : (r & 0x3 | 0x8)
+    return v.toString(16)
+  })
+
 export const archiveS3 = async ({dir, bucket, key}) => {
-  await exec(`tar czf tmp/tar ${dir}`)
-  await exec(`${s3Cli} put tmp/tar s3://${bucket}/${key}`)
+  const f = uuidV4()
+  console.log('----> archiving to s3')
+  await exec('mkdir -p tmp')
+  await exec(`tar czf tmp/tar-${f} ${dir}`)
+  await exec(`${s3Cli} put tmp/tar-${f} s3://${bucket}/${key}`)
+  console.log('----> done archiving to s3')
   return
 }
 
 export const deployS3 = async ({dir, bucket}) => {
+  console.log('----> deploying to s3')
   await exec(`${s3Cli} sync -P ${dir} s3://${bucket}/`)
+  console.log('----> done deploying to s3')
   return
 }
 
