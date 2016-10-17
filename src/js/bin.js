@@ -1,5 +1,4 @@
 import { ship } from './snackship.js'
-import path from 'path' // eslint-disable-line
 import commander from 'commander'
 
 const version = require('../../package.json').version
