@@ -1,0 +1,27 @@
+{
+  "name": "snackship",
+  "version": "0.0.1",
+  "description": "Simple abstractions around deployment",
+  "main": "dist/snackship.js",
+  "author": "Andrew Monks <a@monks.co>",
+  "license": "ISC",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build:snackship": "snackpack run -m snackpack-snackship.json",
+    "build:bin": "snackpack run -m snackpack-bin.json",
+    "build:both": "run-p build:snackship build:bin",
+    "build": "run-s clean build:both",
+    "prepublish": "npm run build"
+  },
+  "bin": {
+    "snackship": "dist/bin.js"
+  },
+  "dependencies": {
+    "commander": "^2.9.0",
+    "s3-cli": "^0.13.0"
+  },
+  "devDependencies": {
+    "npm-run-all": "^3.1.1",
+    "snackpack": "^2.2.0"
+  }
+}

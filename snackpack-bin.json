@@ -1,0 +1,21 @@
+{
+  "paths": {
+    "src": "src",
+    "dist": "dist"
+  },
+  "builders": {
+    "webpack": {
+      "entry": "./src/js/bin.js",
+      "outputFilename": "bin.js"
+    }
+  },
+  "environments": {
+    "defaults": {
+      "builders": [
+        "babel",
+        "es7",
+        "node"
+      ]
+    }
+  }
+}
