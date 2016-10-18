@@ -65,6 +65,13 @@ export const archiveS3 = async ({dir, bucket, key}) => {
   return
 }
 
+export const copy = async ({from, to}) => {
+  log(`copying ${from} to ${to}`)
+  await exec(`cp -r ${from} ${to}`)
+  log('done copying')
+  return
+}
+
 export const deployS3 = async ({dir, bucket}) => {
   log('deploying to s3')
   await exec(`${s3Cli} sync -P ${dir} s3://${bucket}/`)
