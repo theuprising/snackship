@@ -27,7 +27,7 @@ export const exec = (cmd, opts = {}) =>
     }
 
     const parsed = parse(cmd)
-    log(`exec: ${cmd}`)
+    tell(`executing ${cmd}`)
 
     const p = spawn(...parsed, opts)
 
@@ -107,18 +107,22 @@ export const installYarn = async ({dir}) => {
 
 export const read = ({from}) =>
   new Promise((resolve, reject) => {
+    tell(`reading from ${from}`)
     fs.readFile(from, (err, out) => {
       if (err) reject(err)
       if (!err) resolve(out)
     })
+    tell('done reading')
   })
 
 export const write = ({str, to}) =>
   new Promise((resolve, reject) => {
+    tell(`writing to ${to}`)
     fs.writeFile(to, str, (err, out) => {
       if (err) reject(err)
       if (!err) resolve(out)
     })
+    tell('done writing')
   })
 
 export const ship = async config => {
