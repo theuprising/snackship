@@ -1,6 +1,8 @@
 import { spawn } from 'child_process'
+import fs from 'fs'
 
 const s3Cli = 'node_modules/.bin/s3-cli'
+const yarn = 'node_modules/.bin/yarn'
 
 import 'babel-polyfill'
 import babel from 'babel-register'
@@ -92,6 +94,29 @@ export const deployHeroku = async ({dir, app}) => {
   await execIn(`heroku maintenance:off --app ${app}`)
   log('deployed to heroku')
 }
+
+export const installYarn = async ({dir}) => {
+  log('installing deps with yarn')
+  await exec(yarn, {cwd: dir})
+  log('done installing deps')
+  return
+}
+
+export const read = ({from}) =>
+  new Promise((resolve, reject) => {
+    fs.readFile(from, (err, out) => {
+      if (err) reject(err)
+      if (!err) resolve(out)
+    })
+  })
+
+export const write = ({str, to}) =>
+  new Promise((resolve, reject) => {
+    fs.writeFile(to, str, (err, out) => {
+      if (err) reject(err)
+      if (!err) resolve(out)
+    })
+  })
 
 export const ship = async config => {
   log(`shipping with snackship ${version}`)
