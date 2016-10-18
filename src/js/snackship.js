@@ -35,15 +35,16 @@ export const exec = (cmd, opts = {}) =>
       code: ''
     }
 
-    p.stdout.on('data', data => { output.stdout += data })
-    p.stderr.on('data', data => { output.stderr += data })
+    p.stdout.on('data', data => { console.log(data); output.stdout += data })
+    p.stderr.on('data', data => { console.warn(data); output.stderr += data })
+
     p.on('close', code => {
       output.code = code
       if (code === 0) {
-        console.log('success', {output})
+        console.log('success')
         resolve(output)
       } else {
-        console.log('failure', {output})
+        console.log('failure')
         reject(output)
       }
     })
@@ -84,10 +85,10 @@ export const deployS3 = async ({dir, bucket}) => {
 export const deployHeroku = async ({dir, app}) => {
   log('deploying to heroku')
   const execIn = cmd => exec(cmd, {cwd: dir})
-  await execIn(`rm -rf .git`)
-  await execIn(`git init`)
-  await execIn(`git add .`)
-  await execIn(`git commit -am 'build'`)
+  await execIn('rm -rf .git')
+  await execIn('git init')
+  await execIn('git add .')
+  await execIn("git commit -am 'build'")
   const remote = `https://git.heroku.com/${app}.git`
   await execIn(`heroku maintenance:on --app ${app}`)
   await execIn(`git push ${remote} master -f`)
