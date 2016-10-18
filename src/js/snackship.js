@@ -1,5 +1,6 @@
 import { spawn } from 'child_process'
 import fs from 'fs'
+import chalk from 'chalk'
 
 const s3Cli = 'node_modules/.bin/s3-cli'
 const yarn = 'node_modules/.bin/yarn'
@@ -13,7 +14,8 @@ babel({
 
 const version = require('../../package.json').version
 
-const log = (...args) => console.log('----> ⛵️⛵️⛵️  ', ...args)
+const tell = (...args) => console.log(`${chalk.cyan('---->')} ⛵️⛵️⛵️  `, ...args)
+const log = (...args) => console.log('           ', ...args)
 
 // promisified child_process
 // exec :: String -> async { stdout: String, stderr: String, code: Number }
@@ -25,7 +27,7 @@ export const exec = (cmd, opts = {}) =>
     }
 
     const parsed = parse(cmd)
-    console.log('exec', {cmd, parsed, opts})
+    log(`exec: ${cmd}`)
 
     const p = spawn(...parsed, opts)
 
@@ -35,16 +37,16 @@ export const exec = (cmd, opts = {}) =>
       code: ''
     }
 
-    p.stdout.on('data', data => { console.log(data); output.stdout += data })
-    p.stderr.on('data', data => { console.warn(data); output.stderr += data })
+    p.stdout.on('data', data => { log(chalk.white(data.toString('utf8'))); output.stdout += data })
+    p.stderr.on('data', data => { log(chalk.yellow(data.toString('utf8'))); output.stderr += data })
 
     p.on('close', code => {
       output.code = code
       if (code === 0) {
-        console.log('success')
+        log('success')
         resolve(output)
       } else {
-        console.log('failure')
+        log('failure')
         reject(output)
       }
     })
@@ -60,30 +62,30 @@ const uuidV4 = () =>
 
 export const archiveS3 = async ({dir, bucket, key}) => {
   const f = uuidV4()
-  log('archiving to s3')
+  tell('archiving to s3')
   await exec('mkdir -p tmp')
   await exec(`tar czf tmp/tar-${f} ${dir}`)
   await exec(`${s3Cli} put tmp/tar-${f} s3://${bucket}/${key}`)
-  log('done archiving to s3')
+  tell('done archiving to s3')
   return
 }
 
 export const copy = async ({from, to}) => {
-  log(`copying ${from} to ${to}`)
+  tell(`copying ${from} to ${to}`)
   await exec(`cp -r ${from} ${to}`)
-  log('done copying')
+  tell('done copying')
   return
 }
 
 export const deployS3 = async ({dir, bucket}) => {
-  log('deploying to s3')
+  tell('deploying to s3')
   await exec(`${s3Cli} sync -P ${dir} s3://${bucket}/`)
-  log('done deploying to s3')
+  tell('done deploying to s3')
   return
 }
 
 export const deployHeroku = async ({dir, app}) => {
-  log('deploying to heroku')
+  tell('deploying to heroku')
   const execIn = cmd => exec(cmd, {cwd: dir})
   await execIn('rm -rf .git')
   await execIn('git init')
@@ -93,13 +95,13 @@ export const deployHeroku = async ({dir, app}) => {
   await execIn(`heroku maintenance:on --app ${app}`)
   await execIn(`git push ${remote} master -f`)
   await execIn(`heroku maintenance:off --app ${app}`)
-  log('deployed to heroku')
+  tell('deployed to heroku')
 }
 
 export const installYarn = async ({dir}) => {
-  log('installing deps with yarn')
+  tell('installing deps with yarn')
   await exec(yarn, {cwd: dir})
-  log('done installing deps')
+  tell('done installing deps')
   return
 }
 
@@ -120,9 +122,9 @@ export const write = ({str, to}) =>
   })
 
 export const ship = async config => {
-  log(`shipping with snackship ${version}`)
+  tell(`shipping with snackship ${version}`)
   await config.strategy(config)
-  log('shipped!')
+  tell('shipped!')
 }
 
 export default ship
