@@ -60,12 +60,12 @@ const uuidV4 = () =>
     return v.toString(16)
   })
 
-export const archiveS3 = async ({dir, bucket, key}) => {
+export const archiveS3 = async ({dir, bucket, key, id, secret}) => {
   const f = uuidV4()
   tell('archiving to s3')
   await exec('mkdir -p tmp')
   await exec(`tar czf tmp/tar-${f} ${dir}`)
-  await exec(`${s3Cli} put tmp/tar-${f} s3://${bucket}/${key}`)
+  await exec(`env AWS_ACCESS_KEY=${id} AWS_SECRET_KEY=${secret} ${s3Cli} put tmp/tar-${f} s3://${bucket}/${key}`)
   tell('done archiving to s3')
   return
 }
@@ -77,9 +77,9 @@ export const copy = async ({from, to}) => {
   return
 }
 
-export const deployS3 = async ({dir, bucket}) => {
+export const deployS3 = async ({dir, bucket, id, secret}) => {
   tell('deploying to s3')
-  await exec(`${s3Cli} sync -P ${dir} s3://${bucket}/`)
+  await exec(`env AWS_ACCESS_KEY=${id} AWS_SECRET_KEY=${secret} ${s3Cli} sync -P ${dir} s3://${bucket}/`)
   tell('done deploying to s3')
   return
 }
