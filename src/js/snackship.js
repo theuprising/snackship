@@ -102,13 +102,17 @@ export const deployS3 = async ({dir, bucket, id, secret}) => {
   return
 }
 
-export const deployHeroku = async ({tarUrl, app}) => {
+export const deployHeroku = async ({tarUrl, app, apiKey}) => {
   tell('deploying to heroku')
   await axios.post(`https://api.heroku.com/apps/${app}/builds`, {
     source_blob: {
       checksum: null,
       url: tarUrl,
       version: null
+    }
+  }, {
+    headers: {
+      Authorization: `Bearer ${apiKey}`
     }
   })
 }
