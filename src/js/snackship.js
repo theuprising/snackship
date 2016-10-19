@@ -71,11 +71,17 @@ export const archiveS3 = async ({dir, bucket, key, id, secret}) => {
 }
 
 export const id = async () => {
-  return (await exec('git log -1 --format="%ai %h %an %f %D"'))
+  tell('generating commit id')
+  try {
+    await exec(`git diff-index --quiet HEAD`)
+  } catch (e) { tell('COMMIT FIRST!'); throw e }
+  const id = (await exec('git log -1 --format="%ai  %D  %h  %an  %f"'))
     .stdout
     .trim()
     .replace(/HEAD -> /, '')
     .replace(/ /g, '_')
+  tell(`id is ${id}`)
+  return id
 }
 
 export const copy = async ({from, to}) => {
