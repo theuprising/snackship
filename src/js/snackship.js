@@ -14,8 +14,8 @@ babel({
 
 const version = require('../../package.json').version
 
-const tell = (...args) => console.log(`${chalk.cyan('---->')} ⛵️⛵️⛵️  `, ...args)
-const log = (...args) => console.log('           ', ...args)
+export const tell = (...args) => console.log(`${chalk.cyan('---->')} ⛵️⛵️⛵️  `, ...args)
+export const log = (...args) => console.log('           ', ...args)
 
 // promisified child_process
 // exec :: String -> async { stdout: String, stderr: String, code: Number }
