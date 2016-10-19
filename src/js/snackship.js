@@ -70,6 +70,14 @@ export const archiveS3 = async ({dir, bucket, key, id, secret}) => {
   return
 }
 
+export const id = async () => {
+  return (await exec('git log -1 --format="%ai %h %an %f %D"'))
+    .stdout
+    .trim()
+    .replace(/HEAD -> /, '')
+    .replace(/ /g, '_')
+}
+
 export const copy = async ({from, to}) => {
   tell(`copying ${from} to ${to}`)
   await exec(`cp -r ${from} ${to}`)
