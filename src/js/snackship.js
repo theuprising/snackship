@@ -21,15 +21,15 @@ export const log = (...args) => console.log('           ', ...args)
 // exec :: String -> async { stdout: String, stderr: String, code: Number }
 export const exec = (cmd, opts = {}) =>
   new Promise((resolve, reject) => {
-    const parse = cmd => {
-      const [first, ...rest] = cmd.split(' ')
-      return [first, rest]
-    }
+    // const parse = cmd => {
+    //   const [first, ...rest] = cmd.split(' ')
+    //   return [first, rest]
+    // }
 
-    const parsed = parse(cmd)
+    // const parsed = parse(cmd)
     tell(`executing ${cmd}`)
 
-    const p = spawn(...parsed, opts)
+    const p = spawn(cmd, Object.assign(opts, {shell: '/bin/bash'}))
 
     let output = {
       stdout: '',
