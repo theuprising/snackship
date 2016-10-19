@@ -1,4 +1,5 @@
 import { spawn } from 'child_process'
+import axios from 'axios'
 import fs from 'fs'
 import chalk from 'chalk'
 
@@ -64,10 +65,10 @@ export const archiveS3 = async ({dir, bucket, key, id, secret}) => {
   const f = uuidV4()
   tell('archiving to s3')
   await exec('mkdir -p tmp')
-  await exec(`tar czf tmp/tar-${f} ${dir}`)
-  await exec(`env AWS_ACCESS_KEY=${id} AWS_SECRET_KEY=${secret} ${s3Cli} put tmp/tar-${f} s3://${bucket}/${key}`)
+  await exec(`tar czf tmp/tar-${f} -C ${dir} .`)
+  await exec(`env AWS_ACCESS_KEY=${id} AWS_SECRET_KEY=${secret} ${s3Cli} put -P tmp/tar-${f} s3://${bucket}/${key}`)
   tell('done archiving to s3')
-  return
+  return `http://${bucket}.s3.amazonaws.com/${key}`
 }
 
 export const forceCommit = async () => {
@@ -101,18 +102,15 @@ export const deployS3 = async ({dir, bucket, id, secret}) => {
   return
 }
 
-export const deployHeroku = async ({dir, app}) => {
+export const deployHeroku = async ({tarUrl, app}) => {
   tell('deploying to heroku')
-  const execIn = cmd => exec(cmd, {cwd: dir})
-  await execIn('rm -rf .git')
-  await execIn('git init')
-  await execIn('git add .')
-  await execIn("git commit -am 'build'")
-  const remote = `https://git.heroku.com/${app}.git`
-  await execIn(`heroku maintenance:on --app ${app}`)
-  await execIn(`git push ${remote} master -f`)
-  await execIn(`heroku maintenance:off --app ${app}`)
-  tell('deployed to heroku')
+  await axios.post(`https://api.heroku.com/apps/${app}/builds`, {
+    source_blob: {
+      checksum: null,
+      url: tarUrl,
+      version: null
+    }
+  })
 }
 
 export const installYarn = async ({dir}) => {
