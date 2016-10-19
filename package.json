@@ -1,6 +1,6 @@
 {
   "name": "snackship",
-  "version": "0.0.33",
+  "version": "0.0.34",
   "description": "Simple abstractions around deployment",
   "main": "dist/snackship.js",
   "author": "Andrew Monks <a@monks.co>",
