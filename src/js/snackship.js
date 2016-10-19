@@ -112,6 +112,7 @@ export const deployHeroku = async ({tarUrl, app, apiKey}) => {
     }
   }, {
     headers: {
+      Accept: 'application/vnd.heroku+json; version=3',
       Authorization: `Bearer ${apiKey}`
     }
   })
