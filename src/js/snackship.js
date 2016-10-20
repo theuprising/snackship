@@ -116,6 +116,7 @@ export const deployHeroku = async ({tarUrl, app, apiKey}) => {
       Authorization: `Bearer ${apiKey}`
     }
   })
+  tell('done deploying to heroku')
 }
 
 export const installYarn = async ({dir}) => {
