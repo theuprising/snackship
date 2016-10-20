@@ -68,7 +68,7 @@ export const archiveS3 = async ({dir, bucket, key, id, secret}) => {
   await exec(`tar czf tmp/tar-${f} -C ${dir} .`)
   await exec(`env AWS_ACCESS_KEY=${id} AWS_SECRET_KEY=${secret} ${s3Cli} put -P tmp/tar-${f} s3://${bucket}/${key}`)
   tell('done archiving to s3')
-  return `https://${bucket}.s3.amazonaws.com/${key}`
+  return `https://${bucket}.s3.amazonaws.com/${encodeURIComponent(key)}`
 }
 
 export const forceCommit = async () => {
@@ -79,7 +79,7 @@ export const forceCommit = async () => {
 
 export const id = async () => {
   tell('generating commit id')
-  const id = (await exec('git log -1 --format="%ai  %D  %h  %an  %f"'))
+  const id = (await exec('git log -1 --format="%ai  %h  %an  %f"'))
     .stdout
     .trim()
     .replace(/HEAD -> /, '')
